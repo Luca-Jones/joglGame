@@ -2,10 +2,7 @@ package entities.properties.playerstates;
 
 public interface PlayerState {
 
-    void update(double deltaTime);
-
+    PlayerState update(double deltaTime); // does update need time?
     PlayerState handleEvent(PlayerEvent event);
-
-    // TODO: outline interface
     
 }

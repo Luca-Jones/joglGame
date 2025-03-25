@@ -100,14 +100,17 @@ public class Renderer implements GLEventListener {
     @Override
     public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
-        g = new Graphics(gl);
+        g = new Graphics(gl, unitsWide);
     }
 
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
         
         GL2 gl = drawable.getGL().getGL2();
-        g = new Graphics(gl);
+        if (g != null) {
+            g.setGl(gl);
+            g.updateWindowSize(width, height);
+        }
 
         windowWidth = width;
         windowHeight = height;

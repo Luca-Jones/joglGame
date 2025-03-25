@@ -20,12 +20,13 @@ public class Graphics {
 
     private GL2 gl;
     private TextRenderer textRenderer;
+    private int windowWidth, windowHeight, unitsWide;
     private float red, green, blue, alpha; // 0-1
     private float rotation; // degrees CCW
 
-    public Graphics(GL2 gl) {
+    public Graphics(GL2 gl, int unitsWide) {
         this.gl = gl;
-        textRenderer = new TextRenderer(new Font("Arial", Font.BOLD, 36));
+        textRenderer = new TextRenderer(new Font("Arial", Font.BOLD, 18));
         // gl.glEnable(GL2.GL_BLEND); // enable transparency
         gl.glEnable(GL2.GL_TEXTURE_2D);
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -36,6 +37,9 @@ public class Graphics {
         blue = DEFAULT_COLOR;
         alpha = DEFAULT_ALPHA;
         rotation = DEFAULT_ROTATION;
+        windowWidth = 0;
+        windowHeight = 0;
+        this.unitsWide = unitsWide;
     }
 
     public void clearScreen() {
@@ -183,6 +187,26 @@ public class Graphics {
         textRenderer.setColor(red, green, blue, alpha);
         textRenderer.draw(string, x, y);
         textRenderer.endRendering();   
+    }
+
+    public void drawString(String string, float x, float y) {
+        gl.glWindowPos2f(x, y);
+        textRenderer.beginRendering(windowWidth, windowHeight);
+        textRenderer.setColor(red, green, blue, alpha);
+        textRenderer.draw(string, 
+            (int) (x / (double) unitsWide * windowWidth) + windowWidth / 2, 
+            (int) (y / (double) unitsWide * windowWidth) + windowHeight / 2
+        );
+        textRenderer.endRendering();
+    }
+
+    public void updateWindowSize(int windowWidth, int windowHeight) {
+        this.windowWidth = windowWidth;
+        this.windowHeight = windowHeight;
+    }
+
+    public void setGl(GL2 gl) {
+        this.gl = gl;
     }
 
 }

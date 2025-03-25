@@ -1,8 +1,13 @@
 package entities;
 
+import java.awt.Color;
+
 import entities.properties.BlockType;
 import entities.properties.Depth;
 import entities.properties.Direction;
+import entities.properties.playerstates.IdleState;
+import entities.properties.playerstates.PlayerEvent;
+import entities.properties.playerstates.PlayerState;
 import graphics.Camera;
 import graphics.Graphics;
 import graphics.SpriteStore;
@@ -17,12 +22,12 @@ public class Player extends MoveableEntity {
     private static float GRAVITY = -10f;
     private static float FRICTION_COEFFICIENT = 1.5f;
     private static final String SPRITE_FILE_NAME = "resources/image.png";
-    private static final float JUMP_STAT = 2;
-    private static final float SPEED_STAT = 1f;
+    public static final float JUMP_STAT = 2;
+    public static final float SPEED_STAT = 1f;
 
     private String username;
-    @SuppressWarnings("unused")
-    private Direction direction;
+    public Direction direction;
+    private PlayerState state;
 
     public Player(String username, float x, float y) {
         super(
@@ -32,12 +37,15 @@ public class Player extends MoveableEntity {
         );
         this.username = username;
         this.direction = Direction.RIGHT;
+        this.state = IdleState.getInstance(this);
     }
 
     @Override
     public void draw(Graphics g, Camera camera) {
         super.draw(g, camera);
-        g.drawString(username, 1, 1, 2, 2);
+        g.setColor(Color.RED);
+        g.drawString(username, x - camera.getX(), y - camera.getY() + 0.6f);
+        g.drawString(state.getClass().getSimpleName(), x - camera.getX(), y - camera.getY() + 0.8f);
     }
 
     @Override
@@ -78,7 +86,7 @@ public class Player extends MoveableEntity {
     @Override
     public void update(double deltaTime) {
         super.update(deltaTime);
-
+        state = state.update(deltaTime);
         if (y - height/2 <= 0) {
             y = height/2;
             velocityY = 0;
@@ -92,13 +100,11 @@ public class Player extends MoveableEntity {
     public void doubleJump() {}
 
     public void moveLeft() {
-        direction = Direction.LEFT;
-        velocityX = -SPEED_STAT;
+        state = state.handleEvent(PlayerEvent.MOVE_LEFT);
     }
     
     public void moveRight() {
-        direction = Direction.RIGHT;
-        velocityX = SPEED_STAT;
+        state = state.handleEvent(PlayerEvent.MOVE_RIGHT);
     }
 
     public void dash() {}
@@ -106,6 +112,29 @@ public class Player extends MoveableEntity {
     public void rotate(float angle) {
         rotation += angle;
     }
+
+    public float getVelocityX() {
+        return velocityX;
+    }
+
+    public void setVelocityX(float velocityX) {
+        this.velocityX = velocityX;
+    }
+
+    public float getVelocityY() {
+        return velocityY;
+    }
+
+    public void setVelocityY(float velocityY) {
+        this.velocityY = velocityY;
+    }
     
+    public float getAccelerationX() {
+        return accelerationX;
+    }
+
+    public float getAccelerationY() {
+        return accelerationY;
+    }
 
 }
