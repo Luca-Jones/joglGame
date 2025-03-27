@@ -19,10 +19,10 @@ public class Player extends MoveableEntity {
     
     // TODO: player control state machine
 
-    private static float GRAVITY = -10f;
-    private static float FRICTION_COEFFICIENT = 1.5f;
+    private static float GRAVITY = -5f;
+    private static float FRICTION_COEFFICIENT = 2f;
     private static final String SPRITE_FILE_NAME = "resources/image.png";
-    public static final float JUMP_STAT = 6;
+    public static final float JUMP_STAT = 5;
     public static final float SPEED_STAT = 3;
 
     private String username;
@@ -121,7 +121,9 @@ public class Player extends MoveableEntity {
         state = state.handleEvent(PlayerEvent.MOVE_RIGHT);
     }
 
-    public void dash() {}
+    public void dash() {
+        state = state.handleEvent(PlayerEvent.DASH);
+    }
 
     public void rotate(float angle) {
         rotation += angle;

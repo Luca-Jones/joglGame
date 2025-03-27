@@ -50,6 +50,8 @@ public class JumpingState implements PlayerState {
                 player.direction = Direction.RIGHT;
                 player.setVelocityX(Player.SPEED_STAT);
                 return this;
+            case DASH:
+                return DashingState.getInstance(player);
             default:
                 return this;
         }

@@ -36,6 +36,8 @@ public class IdleState implements PlayerState {
             case MOVE_RIGHT:
                 player.direction = Direction.RIGHT;
                 return RunningState.getInstance(player);
+            case DASH:
+                return DashingState.getInstance(player);
             case JUMP:
                 return JumpingState.getInstance(player);
             default:
