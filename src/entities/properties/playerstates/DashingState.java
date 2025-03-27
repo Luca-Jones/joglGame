@@ -3,7 +3,6 @@ package entities.properties.playerstates;
 import entities.Player;
 import entities.properties.Direction;
 
-// TODO: implement this state
 public class DashingState implements PlayerState {
 
     private Player player;
