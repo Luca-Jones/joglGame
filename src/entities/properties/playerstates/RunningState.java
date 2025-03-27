@@ -25,6 +25,9 @@ public class RunningState implements PlayerState {
         if (Math.abs(player.getVelocityX()) <= deltaTime) {
             return IdleState.getInstance(player);
         }
+        if (player.getVelocityY() <= 10 * player.getAccelerationY() * deltaTime) {
+            return FallingState.getInstance(player);
+        }
         return this;
     }
 
@@ -35,12 +38,12 @@ public class RunningState implements PlayerState {
                 player.direction = Direction.LEFT;
                 player.setVelocityX(-Player.SPEED_STAT);
                 return this;
-                case MOVE_RIGHT:
+            case MOVE_RIGHT:
                 player.direction = Direction.RIGHT;
                 player.setVelocityX(Player.SPEED_STAT);
                 return this;
             case JUMP:
-                return null; // JumpingState.getInstance(player);
+                return JumpingState.getInstance(player);
             default:
                 return this;
         }

@@ -21,6 +21,9 @@ public class IdleState implements PlayerState {
 
     @Override
     public PlayerState update(double deltaTime) {
+        // if (player.getVelocityY() <= 0) {
+        //     return FallingState.getInstance(player);
+        // }
         return this;
     }
 
@@ -34,7 +37,7 @@ public class IdleState implements PlayerState {
                 player.direction = Direction.RIGHT;
                 return RunningState.getInstance(player);
             case JUMP:
-                return null; // JumpingState.getInstance(player);
+                return JumpingState.getInstance(player);
             default:
                 return this;
         }

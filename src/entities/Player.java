@@ -22,8 +22,8 @@ public class Player extends MoveableEntity {
     private static float GRAVITY = -10f;
     private static float FRICTION_COEFFICIENT = 1.5f;
     private static final String SPRITE_FILE_NAME = "resources/image.png";
-    public static final float JUMP_STAT = 2;
-    public static final float SPEED_STAT = 1f;
+    public static final float JUMP_STAT = 6;
+    public static final float SPEED_STAT = 3;
 
     private String username;
     public Direction direction;
@@ -53,10 +53,24 @@ public class Player extends MoveableEntity {
         super.handleCollision(otherEntity);
         if (otherEntity instanceof Block) {
             Block block = (Block) otherEntity;
-            if (block.type == BlockType.PLATFORM) {
+            if (block.type == BlockType.SOLID) {
                 if (isAbove(block)) {
                     y = block.y + block.height / 2 + height / 2;
+                    state = state.handleEvent(PlayerEvent.LAND);
+                } else if (isBelow(block)) {
+                    y = block.y - block.height / 2 - height / 2;
                     velocityY = 0;
+                } else if (isRightOf(block)) {
+                    x = block.x + block.width / 2 + width / 2;
+                    velocityX = 0;
+                } else if (isLeftOf(block)) {
+                    x = block.x - block.width / 2 - width / 2;
+                    velocityX = 0;
+                }
+            } else if (block.type == BlockType.PLATFORM) {
+                if (isAbove(block)) {
+                    y = block.y + block.height / 2 + height / 2;
+                    state = state.handleEvent(PlayerEvent.LAND);
                 } else if (isBelow(block)) {
                     // do nothing
                 } else if (isRightOf(block)) {
@@ -69,7 +83,7 @@ public class Player extends MoveableEntity {
             } else if (block.type == BlockType.WALL) {
                 if (isAbove(block)) {
                     y = block.y + block.height / 2 + height / 2;
-                    velocityY = 0;
+                    state = state.handleEvent(PlayerEvent.LAND);
                 } else if (isBelow(block)) {
                     // do nothing
                 } else if (isRightOf(block)) {
@@ -89,12 +103,12 @@ public class Player extends MoveableEntity {
         state = state.update(deltaTime);
         if (y - height/2 <= 0) {
             y = height/2;
-            velocityY = 0;
+            state = state.handleEvent(PlayerEvent.LAND);
         }
     }
 
     public void jump() {
-        velocityY = JUMP_STAT;
+        state = state.handleEvent(PlayerEvent.JUMP);
     }
 
     public void doubleJump() {}

@@ -39,10 +39,10 @@ public abstract class Entity extends GameObject implements Comparable<Entity> {
     public boolean isColliding(Entity otherEntity) {
         // TODO: assuming no rotation for now
         return !(
-            x - width / 2 > otherEntity.x + otherEntity.width / 2 ||
-            x + width / 2 < otherEntity.x - otherEntity.width / 2 ||
-            y - height / 2 > otherEntity.y + otherEntity.height / 2 ||
-            y + height / 2 < otherEntity.y - otherEntity.height / 2
+            x - width / 2 >= otherEntity.x + otherEntity.width / 2 ||
+            x + width / 2 <= otherEntity.x - otherEntity.width / 2 ||
+            y - height / 2 >= otherEntity.y + otherEntity.height / 2 ||
+            y + height / 2 <= otherEntity.y - otherEntity.height / 2
         );
     }
 

@@ -1,6 +1,5 @@
 package entities;
 
-import entities.properties.BlockType;
 import entities.properties.Depth;
 import graphics.Sprite;
 
@@ -59,27 +58,6 @@ public abstract class MoveableEntity extends Entity {
     }
 
     @Override
-    public void handleCollision(Entity otherEntity) {
-        
-        if (otherEntity instanceof Block) {
-            Block block = (Block) otherEntity;
-            if (block.type == BlockType.SOLID) {
-                if (isAbove(block)) {
-                    y = block.y + block.height / 2 + height / 2;
-                    velocityY = 0;
-                } else if (isBelow(block)) {
-                    y = block.y - block.height / 2 - height / 2;
-                    velocityY = 0;
-                } else if (isRightOf(block)) {
-                    x = block.x + block.width / 2 + width / 2;
-                    velocityX = 0;
-                } else if (isLeftOf(block)) {
-                    x = block.x - block.width / 2 - width / 2;
-                    velocityX = 0;
-                }
-            }
-            
-        }
-        
-    }
+    public void handleCollision(Entity otherEntity) {}
+
 }
