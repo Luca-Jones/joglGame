@@ -50,10 +50,6 @@ public class KeyInputHandler implements KeyListener {
             case 'A':
                 player.moveLeft();
                 break;
-            case KeyEvent.VK_DOWN:
-            case 'S':
-                player.dash();
-                break;
             case KeyEvent.VK_RIGHT:
             case 'D':
                 player.moveRight();
@@ -78,6 +74,7 @@ public class KeyInputHandler implements KeyListener {
             case 'W':
                 player.doubleJump();
                 break;
+            case KeyEvent.VK_DOWN:
             case 'S':
                 player.dash();
             default:

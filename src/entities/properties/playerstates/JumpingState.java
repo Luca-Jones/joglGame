@@ -27,15 +27,20 @@ public class JumpingState implements PlayerState {
     
     @Override
     public PlayerState update(double deltaTime) {
-        if (player.getVelocityY() <= 0) {
-            return FallingState.getInstance(player);
-        }
+        // if (player.getVelocityY() <= 0) {
+        //     return FallingState.getInstance(player);
+        // }
         return this;
     }
     
     @Override
     public PlayerState handleEvent(PlayerEvent event) {
         switch (event) {
+            case LAND:
+                player.setVelocityY(0);
+                return IdleState.getInstance(player);
+            case DOUBLEJUMP:
+                return DoubleJumpingState.getInstance(player);
             case JUMP:
                 if (jumpCount == MAX_JUMP_COUNT) {
                     player.setVelocityY(Player.JUMP_STAT);

@@ -111,7 +111,9 @@ public class Player extends MoveableEntity {
         state = state.handleEvent(PlayerEvent.JUMP);
     }
 
-    public void doubleJump() {}
+    public void doubleJump() {
+        state = state.handleEvent(PlayerEvent.DOUBLEJUMP);
+    }
 
     public void moveLeft() {
         state = state.handleEvent(PlayerEvent.MOVE_LEFT);
