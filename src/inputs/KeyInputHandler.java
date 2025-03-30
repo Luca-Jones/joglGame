@@ -62,6 +62,9 @@ public class KeyInputHandler implements KeyListener {
             case 'E':
                 player.rotate(-10);
                 break;
+            case KeyEvent.VK_ESCAPE:
+                System.exit(0);
+                break;
             default:
                 break;
         }

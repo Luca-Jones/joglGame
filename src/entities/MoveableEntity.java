@@ -1,7 +1,9 @@
 package entities;
 
+import entities.properties.CollisionPriorityComparator;
 import entities.properties.Depth;
 import graphics.Sprite;
+import utils.PriorityCollection;
 
 /**
  * handles movement logic for moveable entities in the game.
@@ -12,6 +14,7 @@ public abstract class MoveableEntity extends Entity {
     protected float velocityX, velocityY;
     protected float accelerationX, accelerationY;
     protected float frictionCoefficient;
+    protected PriorityCollection<Entity> collisions;
 
     public MoveableEntity(float x, float y, float width, float height, Sprite sprite, Depth depth, float frictionCoefficient, float gravity) {
         super(x, y, width, height, sprite, depth);
@@ -22,6 +25,7 @@ public abstract class MoveableEntity extends Entity {
         this.frictionCoefficient = frictionCoefficient;
         accelerationX = 0;
         accelerationY = gravity;
+        collisions = new PriorityCollection<>(new CollisionPriorityComparator(this));
     }
 
     @Override
@@ -57,7 +61,19 @@ public abstract class MoveableEntity extends Entity {
         return previousX + width / 2 <= otherEntity.x - otherEntity.width / 2;
     }
 
-    @Override
-    public void handleCollision(Entity otherEntity) {}
+    public abstract void handleCollision(Entity otherEntity);
+
+    public void addCollision(Entity otherEntity) {
+        collisions.add(otherEntity);
+    }
+
+    public void handleCollisions() {
+        for (Entity entity : collisions) {
+            if (isColliding(entity)) {
+                handleCollision(entity);
+            }
+        }
+        collisions.clear();
+    }
 
 }

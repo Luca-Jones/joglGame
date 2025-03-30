@@ -20,11 +20,6 @@ public class Block extends Entity {
         // update animation
     }
 
-    @Override
-    public void handleCollision(Entity otherEntity) {
-        
-    }
-
     private static Sprite getSprite(BlockType type) {
         switch (type) {
             case BlockType.SOLID:

@@ -2,6 +2,7 @@ package main;
 
 import entities.Block;
 import entities.Entity;
+import entities.MoveableEntity;
 import entities.Player;
 import entities.properties.BlockType;
 import graphics.Renderer;
@@ -27,9 +28,14 @@ public class Game extends Thread {
         entities = new ConcurrentSortedList<>();
         Player player = new Player("Joe", 1, 1);
         entities.add(player);
-        entities.add(new Block(BlockType.SOLID, 0.0f, 1.0f, 2f, 2f));
-        entities.add(new Block(BlockType.SOLID, -1.5f, 0.5f, 1f, 1f));
+        entities.add(new Block(BlockType.SOLID, 0.0f, 0.5f, 1f, 1f));
+        entities.add(new Block(BlockType.SOLID, 0.0f, 1.5f, 1f, 1f));
+        entities.add(new Block(BlockType.SOLID, 0.0f, 2.5f, 1f, 1f));
         entities.add(new Block(BlockType.PLATFORM,7f, 3f, 2f, 0.25f));
+        entities.add(new Block(BlockType.PLATFORM,9f, 3f, 2f, 0.25f));
+        entities.add(new Block(BlockType.SOLID, -7.0f, 2.5f, 1f, 1f));
+        entities.add(new Block(BlockType.SOLID, -8.0f, 2.5f, 1f, 1f));
+        entities.add(new Block(BlockType.SOLID, -9.0f, 2.5f, 1f, 1f));
 
         if(isSinglePlayer) {
             renderer = new Renderer(UNTIS_WIDE, entities, player);
@@ -81,13 +87,17 @@ public class Game extends Thread {
 
             entity.update(deltaTime);
 
-            for (Entity otherEntity : entities) {
-                if (entity != otherEntity && entity.isColliding(otherEntity)) {
-                    entity.addCollision(otherEntity);
+            if (entity instanceof MoveableEntity) {
+                MoveableEntity moveableEntity = (MoveableEntity) entity;
+                
+                for (Entity otherEntity : entities) {
+                    if (moveableEntity != otherEntity && moveableEntity.isColliding(otherEntity)) {
+                        moveableEntity.addCollision(otherEntity);
+                    }
                 }
+    
+                moveableEntity.handleCollisions();
             }
-
-            entity.handleCollisions();
 
         }
         

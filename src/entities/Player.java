@@ -17,8 +17,6 @@ import graphics.SpriteStore;
  */
 public class Player extends MoveableEntity {
     
-    // TODO: player control state machine
-
     private static float GRAVITY = -5f;
     private static float FRICTION_COEFFICIENT = 2f;
     private static final String SPRITE_FILE_NAME = "resources/image.png";
@@ -50,7 +48,6 @@ public class Player extends MoveableEntity {
 
     @Override
     public void handleCollision(Entity otherEntity) {
-        super.handleCollision(otherEntity);
         if (otherEntity instanceof Block) {
             Block block = (Block) otherEntity;
             if (block.type == BlockType.SOLID) {
@@ -88,7 +85,8 @@ public class Player extends MoveableEntity {
                     state = state.handleEvent(PlayerEvent.LAND);
                     velocityY = 0;
                 } else if (isBelow(block)) {
-                    // do nothing
+                    y = block.y - block.height / 2 - height / 2;
+                    velocityY = 0;
                 } else if (isRightOf(block)) {
                     x = block.x + block.width / 2 + width / 2;
                     velocityX = 0;
