@@ -57,6 +57,7 @@ public class Player extends MoveableEntity {
                 if (isAbove(block)) {
                     y = block.y + block.height / 2 + height / 2;
                     state = state.handleEvent(PlayerEvent.LAND);
+                    velocityY = 0;
                 } else if (isBelow(block)) {
                     y = block.y - block.height / 2 - height / 2;
                     velocityY = 0;
@@ -71,6 +72,7 @@ public class Player extends MoveableEntity {
                 if (isAbove(block)) {
                     y = block.y + block.height / 2 + height / 2;
                     state = state.handleEvent(PlayerEvent.LAND);
+                    velocityY = 0;
                 } else if (isBelow(block)) {
                     // do nothing
                 } else if (isRightOf(block)) {
@@ -84,6 +86,7 @@ public class Player extends MoveableEntity {
                 if (isAbove(block)) {
                     y = block.y + block.height / 2 + height / 2;
                     state = state.handleEvent(PlayerEvent.LAND);
+                    velocityY = 0;
                 } else if (isBelow(block)) {
                     // do nothing
                 } else if (isRightOf(block)) {

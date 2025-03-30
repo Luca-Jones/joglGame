@@ -44,7 +44,7 @@ public class Renderer implements GLEventListener {
 
         this.unitsWide = unitsWide;
         this.gameObjects = gameObjects;
-        camera = new Camera(cameraFocus, 0, 0);
+        camera = new Camera(cameraFocus, 0, -1);
 
         currentTime = 0;
         previousTime = System.nanoTime();

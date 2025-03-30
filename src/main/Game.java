@@ -28,6 +28,8 @@ public class Game extends Thread {
         Player player = new Player("Joe", 1, 1);
         entities.add(player);
         entities.add(new Block(BlockType.SOLID, 0.0f, 1.0f, 2f, 2f));
+        entities.add(new Block(BlockType.SOLID, -1.5f, 0.5f, 1f, 1f));
+        entities.add(new Block(BlockType.PLATFORM,7f, 3f, 2f, 0.25f));
 
         if(isSinglePlayer) {
             renderer = new Renderer(UNTIS_WIDE, entities, player);

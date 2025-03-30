@@ -29,6 +29,10 @@ public class Block extends Entity {
         switch (type) {
             case BlockType.SOLID:
                 return new Sprite(Color.BLUE);
+            case BlockType.PLATFORM:
+                return new Sprite(Color.LIGHT_GRAY);
+            case BlockType.WALL:
+                return new Sprite(Color.GRAY);
             default:
                 return null;
         }
