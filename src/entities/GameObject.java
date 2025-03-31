@@ -8,7 +8,7 @@ import graphics.Sprite;
 /**
  * Basic class for any drawable object in the game.
  */
-public abstract class GameObject {
+public abstract class GameObject implements Comparable<GameObject> { // TODO: why are GameObjects not comparable, but Entities are?
     
     protected float x, y, width, height;
     protected float rotation;
@@ -23,6 +23,11 @@ public abstract class GameObject {
         this.sprite = sprite;
         this.depth = depth;
         rotation = 0;
+    }
+
+    @Override
+    public int compareTo(GameObject o) {
+        return depth.compareTo(o.depth);
     }
 
     public void draw(Graphics g, Camera camera) {

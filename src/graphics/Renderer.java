@@ -13,6 +13,8 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 
 import entities.GameObject;
+import inputs.ClientKeyInputHandler;
+import inputs.KeyInputHandler;
 
 /**
  * Resposible for rendering the game and all game objects in it.
@@ -30,6 +32,7 @@ public class Renderer implements GLEventListener {
     private int windowHeight;
     private int unitsWide;
     private List<? extends GameObject> gameObjects;
+    private KeyListener keyListener;
     
     private long currentTime;
     private long previousTime;
@@ -60,7 +63,8 @@ public class Renderer implements GLEventListener {
 
     }
 
-    public void addKeyListener(KeyListener keyListener) {
+    public void setKeyListener(KeyListener keyListener) {
+        this.keyListener = keyListener;
         window.addKeyListener(keyListener);
     }
 
@@ -68,8 +72,18 @@ public class Renderer implements GLEventListener {
         window.display();
     }
 
+    // TODO: stinky code
     public void update(double deltaTime) {
+
         camera.update(deltaTime);
+
+        if (keyListener != null) {
+            if (keyListener instanceof KeyInputHandler) {
+                ((KeyInputHandler) keyListener).handleKeys();
+            } else if (keyListener instanceof ClientKeyInputHandler) {
+                ((ClientKeyInputHandler) keyListener).handleKeys();
+            }
+        }
     }
 
     @Override

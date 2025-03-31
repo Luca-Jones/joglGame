@@ -21,7 +21,6 @@ public class Game extends Thread {
     private boolean isRunning;
 
     private Renderer renderer;
-    private KeyInputHandler keyInputHandler;
 
     public Game(boolean isSinglePlayer) {
 
@@ -39,8 +38,7 @@ public class Game extends Thread {
 
         if(isSinglePlayer) {
             renderer = new Renderer(UNTIS_WIDE, entities, player);
-            keyInputHandler = new KeyInputHandler(player);
-            renderer.addKeyListener(keyInputHandler);
+            renderer.setKeyListener(new KeyInputHandler(player));
         }
 
         isRunning = true;
@@ -77,10 +75,6 @@ public class Game extends Thread {
         // renderer and input updates
         if (renderer != null) {
             renderer.update(deltaTime);
-        }
-
-        if (keyInputHandler != null) {
-            keyInputHandler.handleKeys();
         }
 
         for (Entity entity : entities) {
