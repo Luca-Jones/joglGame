@@ -27,7 +27,7 @@ public class Server extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Game game = new Game(false);
+        game = new Game(false);
         running = true;
     }
 
