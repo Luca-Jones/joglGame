@@ -41,6 +41,8 @@ public class FallingState implements PlayerState {
                 return this;
             case DASH:
                 return DashingState.getInstance(player);
+            case JUMP:
+                return JumpingState.getInstance(player);
             default:
                 return this;
         }
