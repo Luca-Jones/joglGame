@@ -16,8 +16,10 @@ public class Sprite {
     
     public BufferedImage image;
     public Texture texture;
+    public String name;
 
     protected Sprite(String iamgeFilePath) {
+        name = iamgeFilePath;
         File imageFile = new File(iamgeFilePath);
         try {
             image = ImageIO.read(imageFile);

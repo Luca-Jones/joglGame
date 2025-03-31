@@ -1,5 +1,5 @@
 package networking.packets;
 
-public class RedrawPacket {
-    
+public class RedrawPacket extends Packet {
+    public RedrawPacket() {}
 }
