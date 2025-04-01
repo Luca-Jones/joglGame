@@ -68,6 +68,10 @@ public class Renderer implements GLEventListener {
         window.addKeyListener(keyListener);
     }
 
+    public void setCameraFocus(GameObject cameraFocus) {
+        camera.setFocus(cameraFocus);
+    }
+
     public void render() {
         window.display();
     }

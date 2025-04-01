@@ -52,7 +52,6 @@ public class Server extends Thread {
         while (running) {
             byte[] data = new byte[2048];
             DatagramPacket datagramPacket = new DatagramPacket(data, data.length);
-            System.out.println("Waiting for packet ...");
             try {
                 socket.receive(datagramPacket);
             } catch (IOException e) {

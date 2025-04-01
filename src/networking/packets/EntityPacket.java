@@ -2,6 +2,7 @@ package networking.packets;
 
 import entities.ClientEntity;
 import entities.GameObject;
+import entities.Player;
 import entities.properties.Depth;
 import graphics.Sprite;
 import graphics.SpriteStore;
@@ -12,6 +13,7 @@ public class EntityPacket extends Packet {
     public float x,y,width,height;
     public float rotation;
     public Depth depth;
+    public boolean isFocus;
     public String spriteName;
 
     public EntityPacket(String username, GameObject gameObject) {
@@ -22,12 +24,13 @@ public class EntityPacket extends Packet {
         this.height = 0;
         this.rotation = gameObject.getRotation();
         this.depth = gameObject.getDepth();
+        this.isFocus = gameObject instanceof Player && ((Player) gameObject).username.equals(username);
         this.spriteName = gameObject.getSpriteName();
     }
 
     public ClientEntity getEntity() {
         Sprite sprite = SpriteStore.getInstance().getSprite(spriteName);
-        ClientEntity entity = new ClientEntity(x, y, width, height, sprite, depth, rotation);
+        ClientEntity entity = new ClientEntity(x, y, width, height, sprite, depth, rotation, isFocus);
         return entity;
     }
 }

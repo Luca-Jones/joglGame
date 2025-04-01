@@ -29,4 +29,8 @@ public class Camera {
         // TODO: implement camera movement
     }
 
+    public void setFocus(GameObject focus) {
+        this.focus = focus;
+    }
+
 }

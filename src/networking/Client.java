@@ -1,5 +1,6 @@
 package networking;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -9,7 +10,9 @@ import java.util.List;
 
 import entities.ClientEntity;
 import entities.GameObject;
+import entities.properties.Depth;
 import graphics.Renderer;
+import graphics.Sprite;
 import inputs.ClientKeyInputHandler;
 import networking.packets.DisconnectPacket;
 import networking.packets.EntityPacket;
@@ -30,7 +33,6 @@ public class Client extends Thread{
     private Renderer renderer;
     private List<GameObject> gameObjects;
     private List<GameObject> entityBuffer;
-    private ClientEntity player;
 
     // TODO: update game objects rather than rebuild them every time
     public Client(InetAddress serverAddress, String username) {
@@ -43,7 +45,9 @@ public class Client extends Thread{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        renderer = new Renderer(10, gameObjects, player); // TODO: player needs to persist between frames
+        ClientEntity temp = new ClientEntity(0, 0, 1, 1, new Sprite(Color.BLACK), Depth.BACK, 0, false);
+        gameObjects.add(temp);
+        renderer = new Renderer(10, gameObjects, temp);
         renderer.setKeyListener(new ClientKeyInputHandler(this));
         running = true;
         System.out.println("Client started ...");
@@ -73,7 +77,6 @@ public class Client extends Thread{
             Packet packet = Packet.deserialize(datagramPacket.getData());
             parsePacket(packet);
             
-            renderer.render();
         }
         
     }
@@ -103,11 +106,16 @@ public class Client extends Thread{
         } else if (packet instanceof EntityPacket) {
             EntityPacket entityPacket = (EntityPacket) packet;
             ClientEntity entity = entityPacket.getEntity();
-            entityBuffer.add(entity);
+            if (entity.isFocus) {
+                renderer.setCameraFocus(entity);
+            }
+            // entityBuffer.add(entity);
+            gameObjects.add(entity);
         } else if (packet instanceof RedrawPacket) {
-            gameObjects.clear();
-            gameObjects.addAll(entityBuffer);
-            entityBuffer.clear();
+            // gameObjects.clear();
+            // gameObjects.addAll(entityBuffer);
+            // entityBuffer.clear();
+            renderer.render();
         }
     }
     
