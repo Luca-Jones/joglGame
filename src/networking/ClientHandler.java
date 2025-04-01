@@ -1,5 +1,7 @@
 package networking;
 
+import java.net.InetAddress;
+
 import com.jogamp.newt.event.KeyEvent;
 
 import entities.Player;
@@ -8,9 +10,13 @@ import networking.packets.PlayerUpdatePacket;
 public class ClientHandler {
 
     public Player player;
+    public InetAddress clientAddress;
+    public int clientPort;
     
-    public ClientHandler(Player player) {
+    public ClientHandler(Player player, InetAddress clientAddress, int clientPort) {
         this.player = player;
+        this.clientAddress = clientAddress;
+        this.clientPort = clientPort;
     }
 
     public void handlePlayerUpdate(PlayerUpdatePacket playerUpdatePacket) {
@@ -51,4 +57,5 @@ public class ClientHandler {
         }
 
     }
+
 }

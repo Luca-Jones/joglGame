@@ -103,8 +103,17 @@ public class Game extends Thread {
         }
     }
 
-    public void addPlayer(Player player) {}
+    public void addPlayer(Player player) {
+        entities.add(player);
+    }
 
-    public void removePlayer(Player player) {}
+    public void removePlayer(String username) {
+        for (Entity entity : entities) {
+            if (entity instanceof Player && ((Player) entity).username.equals(username)) {
+                entities.remove(entity);
+                break;
+            }
+        }
+    }
     
 }

@@ -23,7 +23,7 @@ public class Player extends MoveableEntity {
     public static final float JUMP_STAT = 5;
     public static final float SPEED_STAT = 3;
 
-    private String username;
+    public String username;
     public Direction direction;
     private PlayerState state;
 

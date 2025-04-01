@@ -3,6 +3,8 @@ package networking;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.HashMap;
 import java.util.Map;
 
 import entities.Player;
@@ -23,10 +25,11 @@ public class Server extends Thread {
 
     public Server() {
         try {
-            socket = new DatagramSocket(SERVER_PORT); // TODO: what does the addr really mean?
+            socket = new DatagramSocket(SERVER_PORT);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        clients = new HashMap<>();
         game = new Game(false);
         running = true;
     }
@@ -43,50 +46,68 @@ public class Server extends Thread {
         while (running) {
             byte[] data = new byte[2048];
             DatagramPacket datagramPacket = new DatagramPacket(data, data.length);
+            System.out.println("Waiting for packet ...");
             try {
                 socket.receive(datagramPacket);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Packet packet = Packet.deserialize(datagramPacket.getData());
-            parsePacket(packet);
+            parseDatagramPacket(datagramPacket);
         }
 
     }
 
     // TODO: who is this being sent to?
-    public void sendPacket(Packet packet) {
+    private void sendPacket(Packet packet, InetAddress clientAddress, int clientPort) {
         
-        DatagramPacket datagramPacket = new DatagramPacket(packet.serialize(), packet.serialize().length);
+        DatagramPacket datagramPacket = new DatagramPacket(packet.serialize(), packet.serialize().length, clientAddress, clientPort);
         try {
             socket.send(datagramPacket);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
     }
 
-    public void parsePacket(Packet packet) {
+    private void broadcastPacket(Packet packet) {
+        for (ClientHandler clientHandler : clients.values()) {
+            sendPacket(packet, clientHandler.clientAddress, clientHandler.clientPort);
+        }
+    }
+
+    private void parseDatagramPacket(DatagramPacket datagramPacket) {
+
+        Packet packet = Packet.deserialize(datagramPacket.getData());
+        InetAddress clientAddress = datagramPacket.getAddress();
+        int clientPort = datagramPacket.getPort();
+
         if (packet instanceof LoginPacket) {
+
             LoginPacket loginPacket = (LoginPacket) packet;
             Player player = new Player(loginPacket.username, 0, 1); // TODO: change default spawn
-            ClientHandler clientHandler = new ClientHandler(player);
-            clients.put(loginPacket.username, clientHandler); // TODO: caan override existsing users
+            ClientHandler clientHandler = new ClientHandler(player, clientAddress, clientPort);
             // if (clients.isEmpty()) {clientHandler.player.it = true;}
+            clients.put(loginPacket.username, clientHandler); // TODO: caan override existsing users
             game.addPlayer(player);
-            sendPacket(loginPacket); // Broadcasts the event out to all clients?
+            System.out.println("[" + clientAddress + ":" + clientPort + "] " + loginPacket.username + " has connected!");
+            broadcastPacket(loginPacket);
+
         } else if (packet instanceof DisconnectPacket) {
+
             DisconnectPacket disconnectPacket = (DisconnectPacket) packet;
-            System.out.println("someone disconnected");
             clients.remove(disconnectPacket.username);
-            sendPacket(disconnectPacket);
+            game.removePlayer(disconnectPacket.username);
+            System.out.println("[" + clientAddress + ":" + clientPort + "] " + disconnectPacket.username + " disconnected...");
+            broadcastPacket(disconnectPacket);
+
         } else if (packet instanceof PlayerUpdatePacket) {
+
             PlayerUpdatePacket playerUpdatePacket = (PlayerUpdatePacket) packet;
             if (clients.containsKey(playerUpdatePacket.username)) {
                 clients.get(playerUpdatePacket.username).handlePlayerUpdate(playerUpdatePacket);
             } else {
                 System.out.println("Client not found: " + playerUpdatePacket.username);
             }
+
         }
     }
 

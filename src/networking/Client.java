@@ -20,7 +20,7 @@ import utils.ConcurrentSortedList;
 
 public class Client extends Thread{
 
-    private static final int SERVER_PORT = Server.SERVER_PORT;
+    public static final int SERVER_PORT = Server.SERVER_PORT;
     private InetAddress serverAddress;
     private DatagramSocket socket;
     public String username;
@@ -38,7 +38,7 @@ public class Client extends Thread{
         this.gameObjects = new ConcurrentSortedList<>();
         this.entityBuffer = new ArrayList<>();
         try {
-            socket = new DatagramSocket(SERVER_PORT, this.serverAddress);
+            socket = new DatagramSocket();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,10 +50,13 @@ public class Client extends Thread{
     @Override
     public void run() {
 
+        sendPacket(new LoginPacket(username));
+
         while(running) {
 
             byte[] data = new byte[2048];
             DatagramPacket datagramPacket = new DatagramPacket(data, data.length);
+            System.out.println("Waiting for packet ...");
             try {
                 socket.receive(datagramPacket);
             } catch (IOException e) {
@@ -62,8 +65,8 @@ public class Client extends Thread{
             Packet packet = Packet.deserialize(datagramPacket.getData());
             parsePacket(packet);
 
-            // TODO: change when camera movement is added
-            renderer.update(0);
+            
+            renderer.update(0); // TODO: change when camera movement is added
             
             renderer.render();
         }
@@ -72,7 +75,7 @@ public class Client extends Thread{
 
     public void sendPacket(Packet packet) {
         byte [] data = packet.serialize();
-        DatagramPacket datagramPacket = new DatagramPacket(data, data.length); // idk if you need to include the port and addr
+        DatagramPacket datagramPacket = new DatagramPacket(data, data.length, serverAddress, SERVER_PORT); // idk if you need to include the port and addr
         try {
             socket.send(datagramPacket);
         } catch (IOException e) {
@@ -89,6 +92,9 @@ public class Client extends Thread{
             DisconnectPacket disconnectPacket = (DisconnectPacket) packet;
             System.out.println("[" + serverAddress.getHostAddress() + ":" + SERVER_PORT + "] " + disconnectPacket.username
                     + " has left the game ...");
+            if (disconnectPacket.username.equals(username)) {
+                running = false;
+            }
         } else if (packet instanceof EntityPacket) {
             EntityPacket entityPacket = (EntityPacket) packet;
             ClientEntity entity = entityPacket.getEntity();
