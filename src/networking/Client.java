@@ -16,6 +16,7 @@ import networking.packets.EntityPacket;
 import networking.packets.LoginPacket;
 import networking.packets.Packet;
 import networking.packets.RedrawPacket;
+import networking.packets.GameStateRequestPacket;
 import utils.ConcurrentSortedList;
 
 public class Client extends Thread{
@@ -29,7 +30,7 @@ public class Client extends Thread{
     private Renderer renderer;
     private List<GameObject> gameObjects;
     private List<GameObject> entityBuffer;
-    private GameObject player;
+    private ClientEntity player;
 
     // TODO: update game objects rather than rebuild them every time
     public Client(InetAddress serverAddress, String username) {
@@ -42,9 +43,10 @@ public class Client extends Thread{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        renderer = new Renderer(10, gameObjects, player);
+        renderer = new Renderer(10, gameObjects, player); // TODO: player needs to persist between frames
         renderer.setKeyListener(new ClientKeyInputHandler(this));
         running = true;
+        System.out.println("Client started ...");
     }
 
     @Override
@@ -54,9 +56,15 @@ public class Client extends Thread{
 
         while(running) {
 
+            renderer.update(0); // TODO: change when camera movement is added
+
+            // send a request
+            GameStateRequestPacket gameStateRequestPacket = new GameStateRequestPacket(username);
+            sendPacket(gameStateRequestPacket);
+
+            // wait for a reply
             byte[] data = new byte[2048];
             DatagramPacket datagramPacket = new DatagramPacket(data, data.length);
-            System.out.println("Waiting for packet ...");
             try {
                 socket.receive(datagramPacket);
             } catch (IOException e) {
@@ -64,9 +72,6 @@ public class Client extends Thread{
             }
             Packet packet = Packet.deserialize(datagramPacket.getData());
             parsePacket(packet);
-
-            
-            renderer.update(0); // TODO: change when camera movement is added
             
             renderer.render();
         }

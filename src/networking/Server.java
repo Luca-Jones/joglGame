@@ -5,14 +5,19 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import entities.Entity;
 import entities.Player;
 import main.Game;
 import networking.packets.DisconnectPacket;
+import networking.packets.EntityPacket;
+import networking.packets.GameStateRequestPacket;
 import networking.packets.LoginPacket;
 import networking.packets.Packet;
 import networking.packets.PlayerUpdatePacket;
+import networking.packets.RedrawPacket;
 
 public class Server extends Thread {
     
@@ -32,6 +37,7 @@ public class Server extends Thread {
         clients = new HashMap<>();
         game = new Game(false);
         running = true;
+        System.out.println("Server started ...");
     }
 
     @Override
@@ -107,6 +113,18 @@ public class Server extends Thread {
             } else {
                 System.out.println("Client not found: " + playerUpdatePacket.username);
             }
+
+        } else if (packet instanceof GameStateRequestPacket) {
+
+            GameStateRequestPacket gameStateRequestPacket = (GameStateRequestPacket) packet;
+            List<Entity> entities = game.getEntities();
+
+            for (Entity entity : entities) {
+                EntityPacket entityPacket = new EntityPacket(gameStateRequestPacket.username, entity);
+                sendPacket(entityPacket, clientAddress, clientPort);
+            }
+            RedrawPacket redrawPacket = new RedrawPacket();
+            sendPacket(redrawPacket, clientAddress, clientPort);
 
         }
     }

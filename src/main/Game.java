@@ -115,5 +115,9 @@ public class Game extends Thread {
             }
         }
     }
+
+    public ConcurrentSortedList<Entity> getEntities() {
+        return entities;
+    }
     
 }

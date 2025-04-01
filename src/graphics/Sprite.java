@@ -18,14 +18,10 @@ public class Sprite {
     public Texture texture;
     public String name;
 
-    protected Sprite(String iamgeFilePath) {
+    protected Sprite(String iamgeFilePath) throws IOException {
         name = iamgeFilePath;
         File imageFile = new File(iamgeFilePath);
-        try {
-            image = ImageIO.read(imageFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        image = ImageIO.read(imageFile);
         texture = null;
     }
     

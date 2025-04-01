@@ -1,6 +1,7 @@
 package graphics;
 
 import java.util.Map;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -24,7 +25,11 @@ public class SpriteStore {
 
     public Sprite getSprite(String spriteFileName) {
         if (!sprites.containsKey(spriteFileName)) {
-            sprites.put(spriteFileName, new Sprite(spriteFileName));
+            try {
+                sprites.put(spriteFileName, new Sprite(spriteFileName));
+            } catch (IOException | NullPointerException e) { // stinky
+                sprites.put(spriteFileName, new Sprite(java.awt.Color.BLACK)); // TODO: remove
+            }
         }
         return sprites.get(spriteFileName);
     }
