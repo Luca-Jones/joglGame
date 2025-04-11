@@ -3,6 +3,7 @@ package graphics;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.awt.TextRenderer;
 import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureCoords;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
 import java.awt.Color;
@@ -27,8 +28,9 @@ public class Graphics {
     public Graphics(GL2 gl, int unitsWide) {
         this.gl = gl;
         textRenderer = new TextRenderer(new Font("Arial", Font.BOLD, 18));
-        // gl.glEnable(GL2.GL_BLEND); // enable transparency
         gl.glEnable(GL2.GL_TEXTURE_2D);
+        gl.glEnable(GL2.GL_BLEND); // enable transparency
+        gl.glBlendFunc(GL2.GL_ONE, GL2.GL_ONE_MINUS_SRC_ALPHA);
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
 
@@ -140,6 +142,12 @@ public class Graphics {
         if (texture == null) {
             return;
         }
+        
+        // TextureCoords tc = texture.getImageTexCoords();
+        // float tx1 = tc.left();
+        // float ty1 = tc.top();
+        // float tx2 = tc.right();
+        // float ty2 = tc.bottom();
 
         gl.glBindTexture(GL2.GL_TEXTURE_2D, texture.getTextureObject());
         gl.glColor4f(red, green, blue, alpha);
