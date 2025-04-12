@@ -138,16 +138,19 @@ public class Graphics {
         drawTexture(texture, x, y, width, height);
     }
 
+    public void drawTexture(Texture texture, float x, float y) {
+        TextureCoords tc = texture.getImageTexCoords();
+        float tx1 = tc.left();
+        float ty1 = tc.top();
+        float tx2 = tc.right();
+        float ty2 = tc.bottom();
+        drawTexture(texture, x, y, tx2 - tx1, ty2 - ty1);
+    }
+
     public void drawTexture(Texture texture, float x, float y, float width, float height) {
         if (texture == null) {
             return;
         }
-        
-        // TextureCoords tc = texture.getImageTexCoords();
-        // float tx1 = tc.left();
-        // float ty1 = tc.top();
-        // float tx2 = tc.right();
-        // float ty2 = tc.bottom();
 
         gl.glBindTexture(GL2.GL_TEXTURE_2D, texture.getTextureObject());
         gl.glColor4f(red, green, blue, alpha);
