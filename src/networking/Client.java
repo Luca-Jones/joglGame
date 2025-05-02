@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.ArrayList;
+// import java.util.ArrayList;
 import java.util.List;
 
 import entities.ClientEntity;
@@ -32,14 +32,14 @@ public class Client extends Thread{
 
     private Renderer renderer;
     private List<GameObject> gameObjects;
-    private List<GameObject> entityBuffer;
+    // private List<GameObject> entityBuffer;
 
     // TODO: update game objects rather than rebuild them every time
     public Client(InetAddress serverAddress, String username) {
         this.serverAddress = serverAddress;
         this.username = username;
         this.gameObjects = new ConcurrentSortedList<>();
-        this.entityBuffer = new ArrayList<>();
+        // this.entityBuffer = new ArrayList<>();
         try {
             socket = new DatagramSocket();
         } catch (Exception e) {

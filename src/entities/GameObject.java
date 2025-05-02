@@ -8,7 +8,7 @@ import graphics.Sprite;
 /**
  * Basic class for any drawable object in the game.
  */
-public abstract class GameObject implements Comparable<GameObject> { // TODO: why are GameObjects not comparable, but Entities are?
+public abstract class GameObject implements Comparable<GameObject> {
     
     protected float x, y, width, height;
     protected float rotation;
