@@ -119,6 +119,7 @@ public class Renderer implements GLEventListener {
     public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         g = new Graphics(gl, unitsWide);
+        drawable.getGL().setSwapInterval(0);
     }
 
     @Override
